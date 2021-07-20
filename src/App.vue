@@ -11,9 +11,13 @@
       ></TodoInput>
       <div>
         <ul>
-          <TodoListItem />
-          <TodoListItem />
-          <TodoListItem />
+          <TodoListItem
+            v-for="(todo, index) in todoItems"
+            :key="index"
+            :todo="todo"
+            :todoIndex="index"
+            @delete="deleteTodoItem"
+          />
         </ul>
       </div>
     </main>
@@ -63,6 +67,11 @@ export default Vue.extend({
     },
     fetchTodoItems() {
       this.todoItems = storage.fetch();
+    },
+    deleteTodoItem(todoIndex: number) {
+      this.todoItems.splice(todoIndex, 1);
+
+      storage.save(this.todoItems);
     },
   },
   created() {
