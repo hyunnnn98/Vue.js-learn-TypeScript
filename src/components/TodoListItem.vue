@@ -1,30 +1,42 @@
 <template>
   <li>
-    <span>{{ todo }}</span>
-    <button @click="deleteTodoItem">삭제</button>
+    <span class="item" :class="todoItemClass" @click="toggleItem">{{
+      todoItem.title
+    }}</span>
+    <button @click="removeItem">삭제</button>
   </li>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Todo } from '@/App.vue';
+import Vue, { PropType } from 'vue';
 
 export default Vue.extend({
   props: {
-    todo: {
-      type: String,
-      default: '',
-    },
-    todoIndex: {
-      type: Number,
-      default: 0,
+    todoItem: Object as PropType<Todo>,
+    todoIndex: Number,
+  },
+  computed: {
+    todoItemClass(): string | null {
+      return this.todoItem.done ? 'complete' : null;
     },
   },
   methods: {
-    deleteTodoItem() {
-      this.$emit('delete', this.todoIndex);
+    toggleItem() {
+      this.$emit('toggle', this.todoItem, this.todoIndex);
+    },
+    removeItem() {
+      this.$emit('remove', this.todoIndex);
     },
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.item {
+  cursor: pointer;
+}
+.complete {
+  text-decoration: line-through;
+}
+</style>
